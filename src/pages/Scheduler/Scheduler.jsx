@@ -70,12 +70,12 @@ class Scheduler extends Component {
         case 1:
           return {
             status: 'ASSIGNED-UPLOAD',
-            color: 'blue',
+            color: 'purple',
           };
         case 2:
           return {
             status: 'SCHEDULED-UPLOAD',
-            color: 'blue',
+            color: 'purple',
           };
         case 3:
           return {
@@ -85,12 +85,12 @@ class Scheduler extends Component {
         case 4:
           return {
             status: 'ASSIGNED-SG',
-            color: 'orange',
+            color: 'purple',
           };
         case 5:
           return {
             status: 'SCHEDULED-SG',
-            color: 'orange',
+            color: 'purple',
           };
         case 6:
           return {

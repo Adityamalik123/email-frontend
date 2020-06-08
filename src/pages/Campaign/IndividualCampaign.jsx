@@ -138,7 +138,7 @@ class Campaign extends Component {
       type: 'campaign/updateCampaigns',
       payload: clonedCampaign,
     }).then(() => {
-      dispatch(routerRedux.push('/notification/campaigns'));
+      dispatch(routerRedux.push('/notification/scheduler'));
       message.success('Request in progress. You can track it in scheduler tab.');
     });
   };
