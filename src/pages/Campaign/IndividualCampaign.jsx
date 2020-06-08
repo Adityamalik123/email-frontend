@@ -5,11 +5,14 @@ import TweenOneGroup from 'rc-tween-one';
 import _ from 'lodash';
 import { routerRedux } from 'dva/router';
 import React, { Component } from 'react';
-import { Card, Menu, Col, Icon, message, Table } from 'antd';
+import { Card, Menu, Col, Icon, message, Table, Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 import { connect } from 'dva';
 
 import Email from './Email';
 import styles from '@/pages/Scheduler/Scheduler.less';
+
+const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 @connect(state => ({
   campaign: state.campaign,
@@ -153,15 +156,17 @@ class Campaign extends Component {
       },
     }).then(() => {
       const { campaign: { campaignInfo } } = this.props;
-      this.setState({ pageLoading: false });
       if (campaignInfo.status) {
         dispatch({
           type: 'campaign/fetchStats',
           payload: {
             campaignId: campaignInfo._id,
           },
+        }).then(() => {
+          this.setState({ pageLoading: false });
         });
       } else {
+          this.setState({ pageLoading: false });
           this.getAudience();
       }
     });
@@ -266,12 +271,14 @@ class Campaign extends Component {
               {
                 showReports &&
                   <div>
-                    <Table
-                      className={styles.table}
-                      columns={columns}
-                      dataSource={this.getData()}
-                      size="default"
-                    />
+                    <Spin spinning={pageLoading} indicator={antIcon}>
+                      <Table
+                        className={styles.table}
+                        columns={columns}
+                        dataSource={this.getData()}
+                        size="default"
+                      />
+                    </Spin>
                   </div>
               }
               {

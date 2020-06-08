@@ -3,6 +3,7 @@ import { stringify } from 'querystring';
 import { accountLogin, logout } from '@/services/login';
 // import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
+import { message } from 'antd';
 
 const Model = {
   namespace: 'login',
@@ -19,6 +20,8 @@ const Model = {
 
       if (response.success === true) {
         yield put(routerRedux.replace('/'));
+      } else {
+        message.error('Wrong username/password')
       }
     },
 
