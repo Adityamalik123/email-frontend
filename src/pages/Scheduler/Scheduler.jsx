@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import TweenOneGroup from 'rc-tween-one';
 import { routerRedux } from 'dva/router';
 import React, { Component } from 'react';
@@ -28,6 +29,15 @@ class Scheduler extends Component {
         currTime: moment().tz(timeZone).format('MM/DD/YYYY hh:mm:ss A z'),
       });
     }, 1000);
+    this.timer = setInterval(() => {
+      dispatch({
+        type: 'scheduler/fetchList',
+      });
+    }, 6000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
 
   getData = () => {
@@ -47,31 +57,67 @@ class Scheduler extends Component {
   render() {
     const { selectedTab } = this.state;
     const { dispatch } = this.props;
+    const jobStatusFromCode = code => {
+      switch (code) {
+        case 0:
+          return {
+            status: 'PENDING-UPLOAD',
+            color: 'blue',
+          };
+        case 1:
+          return {
+            status: 'ASSIGNED-UPLOAD',
+            color: 'blue',
+          };
+        case 2:
+          return {
+            status: 'SCHEDULED-UPLOAD',
+            color: 'blue',
+          };
+        case 3:
+          return {
+            status: 'PENDING-SG',
+            color: 'orange',
+          };
+        case 4:
+          return {
+            status: 'ASSIGNED-SG',
+            color: 'orange',
+          };
+        case 5:
+          return {
+            status: 'SCHEDULED-SG',
+            color: 'orange',
+          };
+        case 6:
+          return {
+            status: 'COMPLETED',
+            color: 'green',
+          };
+        case 7:
+          return {
+            status: 'FAILED',
+            color: 'red',
+          };
+        case 8:
+          return {
+            status: 'PAUSED',
+            color: 'grey',
+          };
+        default:
+          return {
+            status: 'UNKNOWN',
+            color: 'grey',
+          };
+      }
+    };
     const columns = [
       {
         title: 'Status',
         dataIndex: 'icon',
         render: icon => {
-          let color = 'blue';
-          let status = 'PENDING';
-          if (icon) {
-            if (icon === 2) {
-              color = 'blue';
-              status = 'SCHEDULED'
-            } else if (icon === 3) {
-              color = 'red';
-              status = 'FAILED';
-            } else if (icon === 1) {
-              color = 'blue';
-              status = 'ASSIGNED';
-            } else if (icon === 4) {
-              color = 'green';
-              status = 'COMPLETED';
-            } else if (icon === 5) {
-              color = 'orange';
-              status = 'PAUSED';
-            }
-          }
+          const { color } = jobStatusFromCode(icon);
+          const { status } = jobStatusFromCode(icon);
           return (
             <Tag color={color} key={icon}>
               {status}
@@ -94,31 +140,6 @@ class Scheduler extends Component {
       {
         title: 'Next Execution Time',
         dataIndex: 'nextExecutionTime',
-      },
-      {
-        title: 'Actions',
-        dataIndex: 'key',
-        render: (key, record) => (
-          <span>
-              <div>
-                {record.icon !== 4 ? (
-                  <a onClick={() => this.handleEdit(key)}>Edit</a>) : '-'
-                }
-                {record.icon !== 5 && record.icon !== 4 && (
-                  <span>
-                    <Divider type="vertical"/>
-                    <a onClick={() => this.handlePause(key, 5)}>Pause</a>
-                  </span>
-                )}
-                {record.icon === 5 && (
-                  <span>
-                    <Divider type="vertical"/>
-                    <a onClick={() => this.handlePause(key, 0)}>Resume</a>
-                  </span>
-                )}
-              </div>
-          </span>
-        ),
       },
     ];
     const {
