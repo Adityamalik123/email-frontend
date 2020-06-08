@@ -102,11 +102,8 @@ class Campaign extends Component {
 
   handleSubmit = data => {
     const { dispatch, campaign: { campaignInfo } } = this.props;
-    console.log(data, 'data');
     const { previewItems, audience } = data;
-    console.log(campaignInfo, 'campaignInfo')
     _.map(previewItems, i => {
-      console.log(_.get(i, 'schedule.cronChoice'), 'lo')
       if (_.get(i, 'schedule.cronChoice') === '1') {
         dispatch({
           type: 'campaign/createJob',
@@ -132,6 +129,7 @@ class Campaign extends Component {
             listId: campaignInfo.listIdSg,
             content: i.content,
             subject: i.subject,
+            options: { cronExpirationDate: i.schedule.cronExpirationDate },
           },
         })
       }

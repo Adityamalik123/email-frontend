@@ -14,7 +14,7 @@ class CronEditor extends React.Component {
     ],
     activeCronChoice: '1',
     nextExecutionTime: moment(),
-    cronExpirationDate: moment().add(5, 'days'),
+    cronExpirationDate: moment().add(3, 'days'),
   };
 
   componentDidMount() {
@@ -62,7 +62,7 @@ class CronEditor extends React.Component {
     let { cron, cronExpirationDate } = this.state;
     if (reset) {
       cron = ['*/10', '*', '*', '*', '*'];
-      cronExpirationDate = moment().add(5, 'days')
+      cronExpirationDate = moment().add(3, 'days')
     }
     cron[index] = value;
     this.setState({ cron });

@@ -31,7 +31,6 @@ export default class ConfigureEmail extends Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const { data, editId } = this.props;
-    console.log(editId, 'edit')
     const formItemLayout = {
       labelCol: { span: 6 },
       wrapperCol: { span: 14 },
