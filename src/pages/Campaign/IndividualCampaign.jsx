@@ -5,10 +5,11 @@ import TweenOneGroup from 'rc-tween-one';
 import _ from 'lodash';
 import { routerRedux } from 'dva/router';
 import React, { Component } from 'react';
-import { Card, Menu, Col, Icon, message } from 'antd';
+import { Card, Menu, Col, Icon, message, Table } from 'antd';
 import { connect } from 'dva';
 
 import Email from './Email';
+import styles from '@/pages/Scheduler/Scheduler.less';
 
 @connect(state => ({
   campaign: state.campaign,
@@ -166,9 +167,57 @@ class Campaign extends Component {
     });
   };
 
+  getData = () => {
+    const { campaign: { stats } } = this.props;
+    return _.map(stats, i => ({
+      id: i.id,
+      subject: i.subject,
+      delivered: i.data.delivered || '-',
+      opens: i.data.opens || '-',
+      requests: i.data.requests || '-',
+      unique_opens: i.data.unique_opens || '-',
+      spam_reports: i.data.spam_reports || '-',
+      invalid_emails: i.data.invalid_emails || '-',
+    })).reverse();
+  };
+
   render() {
+    const columns = [
+      {
+        title: 'Id',
+        dataIndex: 'id',
+      },
+      {
+        title: 'Subject',
+        dataIndex: 'subject',
+      },
+      {
+        title: 'Requests',
+        dataIndex: 'requests',
+      },
+      {
+        title: 'Delivered',
+        dataIndex: 'delivered',
+      },
+      {
+        title: 'Opens',
+        dataIndex: 'opens',
+      },
+      {
+        title: 'Unique Opens',
+        dataIndex: 'unique_opens',
+      },
+      {
+        title: 'Spam Reports',
+        dataIndex: 'spam_reports',
+      },
+      {
+        title: 'Invalid Emails',
+        dataIndex: 'invalid_emails',
+      },
+    ];
     const { selectedTab, pageLoading } = this.state;
-    const { dispatch, campaign: { campaignInfo, audience, stats } } = this.props;
+    const { dispatch, campaign: { campaignInfo, audience } } = this.props;
     const showReports = campaignInfo && campaignInfo.status;
     const {
       campaign: { loading },
@@ -217,7 +266,12 @@ class Campaign extends Component {
               {
                 showReports &&
                   <div>
-                    {JSON.stringify(stats)}
+                    <Table
+                      className={styles.table}
+                      columns={columns}
+                      dataSource={this.getData()}
+                      size="default"
+                    />
                   </div>
               }
               {
