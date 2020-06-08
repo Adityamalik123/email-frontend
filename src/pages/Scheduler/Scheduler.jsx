@@ -56,6 +56,18 @@ class Scheduler extends Component {
       })).reverse();
   };
 
+  handleStop = id => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'scheduler/stopJob',
+      id,
+    }).then(() => {
+      dispatch({
+        type: 'scheduler/fetchList',
+      });
+    });
+  };
+
 
   render() {
     const { selectedTab } = this.state;
@@ -104,7 +116,7 @@ class Scheduler extends Component {
           };
         case 8:
           return {
-            status: 'PAUSED',
+            status: 'STOPPED',
             color: 'grey',
           };
         default:
@@ -143,6 +155,24 @@ class Scheduler extends Component {
       {
         title: 'Next Execution Time',
         dataIndex: 'nextExecutionTime',
+      },
+      {
+        title: 'Actions',
+        dataIndex: 'key',
+        render: (key, record) => (
+          <span>
+            {record.category !== 'segment-creation' ?
+              (
+                <div>
+                  {record.icon !== 6 && record.icon !== 7 && record.icon !== 8 && (
+                    <span>
+                      <a onClick={() => this.handleStop(key)}>Stop</a>
+                    </span>
+                  )}
+                </div>) : '-'
+            }
+          </span>
+        ),
       },
     ];
     const {

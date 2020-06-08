@@ -1,4 +1,4 @@
-import { getSchedulerList } from '@/services/scheduler';
+import { getSchedulerList, stopRunningJob } from '@/services/scheduler';
 
 export default {
   namespace: 'scheduler',
@@ -6,12 +6,15 @@ export default {
   state: {},
 
   effects: {
-    * fetchList(bot, { call, put }) {
+    * fetchList(_, { call, put }) {
       const response = yield call(getSchedulerList);
       yield put({
         type: 'updateSchedulerList',
         payload: response.data,
       });
+    },
+    * stopJob ({ id }, { call }) {
+      yield call(stopRunningJob, id);
     },
   },
 
