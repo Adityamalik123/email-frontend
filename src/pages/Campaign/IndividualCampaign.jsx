@@ -151,24 +151,24 @@ class Campaign extends Component {
         campaignId,
       },
     }).then(() => {
-      // const { campaign: { campaignInfo } } = this.props;
+      const { campaign: { campaignInfo } } = this.props;
       this.setState({ pageLoading: false });
-      // if (campaignInfo.status) {
-      //   dispatch({
-      //     type: 'campaign/fetchStats',
-      //     payload: {
-      //       campaignId: campaignInfo._id,
-      //     },
-      //   });
-      // } else {
+      if (campaignInfo.status) {
+        dispatch({
+          type: 'campaign/fetchStats',
+          payload: {
+            campaignId: campaignInfo._id,
+          },
+        });
+      } else {
           this.getAudience();
-      // }
+      }
     });
   };
 
   render() {
     const { selectedTab, pageLoading } = this.state;
-    const { dispatch, campaign: { campaignInfo, audience } } = this.props;
+    const { dispatch, campaign: { campaignInfo, audience, stats } } = this.props;
     const showReports = campaignInfo && campaignInfo.status;
     const {
       campaign: { loading },
@@ -217,7 +217,7 @@ class Campaign extends Component {
               {
                 showReports &&
                   <div>
-                    Stats Will Appear Here
+                    {JSON.stringify(stats)}
                   </div>
               }
               {

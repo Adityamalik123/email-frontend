@@ -21,3 +21,7 @@ export async function pushJob(params) {
     data: params,
   });
 }
+
+export async function getReports(payload) {
+  return request(`/api/backend/campaign/stats?campaignId=${payload.campaignId}`);
+}

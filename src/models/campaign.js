@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { fetchList, createOrUpdateCampaign, fetchById, pushJob } from '@/services/campaign';
+import { fetchList, createOrUpdateCampaign, fetchById, pushJob, getReports } from '@/services/campaign';
 import { getMeta, getAudienceData } from '@/services/audience';
 
 const Model = {
@@ -27,6 +27,20 @@ const Model = {
         type: 'changeDataLoading',
         dataLoading: false,
       });
+    },
+    * fetchStats({ payload }, { call, put }) {
+      const reports = yield call(getReports, payload);
+      if (reports.success) {
+        yield put({
+          type: 'changeStats',
+          payload: reports.data,
+        });
+      } else {
+        yield put({
+          type: 'changeStats',
+          payload: [],
+        });
+      }
     },
     * createOrUpdate({ payload, data }, { call, put }) {
       yield put({
@@ -137,6 +151,12 @@ const Model = {
       return {
         ...state,
         audience: payload.payload,
+      };
+    },
+    changeStats(state, payload) {
+      return {
+        ...state,
+        stats: payload.payload,
       };
     },
     changeAudienceData(state, payload) {
