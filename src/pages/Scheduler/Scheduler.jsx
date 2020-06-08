@@ -2,7 +2,7 @@ import _ from 'lodash';
 import TweenOneGroup from 'rc-tween-one';
 import { routerRedux } from 'dva/router';
 import React, { Component } from 'react';
-import { Card, Menu, Col, Layout, Divider, Table, Tag } from 'antd';
+import { Card, Menu, Col, Layout, Divider, Table, Tag, Icon } from 'antd';
 import { connect } from 'dva';
 import momentTimezone from 'moment-timezone';
 import moment from 'moment';
@@ -30,8 +30,11 @@ class Scheduler extends Component {
       });
     }, 1000);
     this.timer = setInterval(() => {
+      this.setState({ refreshLoading: true });
       dispatch({
         type: 'scheduler/fetchList',
+      }).then(() => {
+        this.setState({ refreshLoading: false });
       });
     }, 6000);
   }
@@ -177,7 +180,7 @@ class Scheduler extends Component {
               padding: '24px',
             }}
           >
-            <Col span={24}>
+            <Col span={16}>
               <div
                 style={{
                   padding: '20px',
@@ -193,6 +196,17 @@ class Scheduler extends Component {
                 >
                   {this.state.currTime}
                 </a>
+              </div>
+            </Col>
+            <Col span={8}>
+              <div
+                style={{
+                  float: 'right',
+                  padding: '20px',
+                  marginBottom: '5px',
+                }}
+              >
+              {this.state.refreshLoading && <a style={{ fontSize: 'small', fontWeight: 500, color: 'black' }}><Icon type="loading" /> &nbsp; Refreshing</a>}
               </div>
             </Col>
             <Divider />
