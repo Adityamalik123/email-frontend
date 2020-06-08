@@ -60,6 +60,7 @@ class Campaign extends Component {
         return;
       }
       this.handleCancel();
+      this.setState({ pageLoading: true });
       dispatch({
         type: 'campaign/createOrUpdate',
         payload: {
@@ -67,11 +68,9 @@ class Campaign extends Component {
           description: values.description,
         },
         data,
-      })
-      //   .then(() => {
-      //   // eslint-disable-next-line no-underscore-dangle
-      //   this.showCampaign(data[0]._id);
-      // });
+      }).then(() => {
+        this.setState({ pageLoading: false });
+      });
     });
   };
 

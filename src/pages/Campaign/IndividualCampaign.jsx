@@ -139,7 +139,7 @@ class Campaign extends Component {
       payload: clonedCampaign,
     }).then(() => {
       dispatch(routerRedux.push('/notification/campaigns'));
-      message.success('Request in progress.');
+      message.success('Request in progress. You can track it in scheduler tab.');
     });
   };
 
